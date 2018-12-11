@@ -37,9 +37,4 @@ public class Rubrum {
                 "Skład: " + squad(this.judges);
     }
 
-    public void moreThan1Rubrum (String[] keys, Map<String,Items> items){
-
-        for(String k: keys) System.out.println(new Rubrum(k, items).toString());
-    }
-
 }

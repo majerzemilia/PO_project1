@@ -1,12 +1,10 @@
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 @JsonIgnoreProperties(value = { "id", "source","courtReporters", "decision", "summary", "legalBases", "keywords",
     "referencedCourtCases","receiptDate","meansOfAppeal","judgmentResult","lowerCourtJudgments","personnelType",
-        "judgmentForm", "division", "chambers", "dissentingOpinions"})
+        "judgmentForm", "division", "chambers", "dissentingOpinions", "judgmentType"})
 
 public class Items {
 
@@ -16,16 +14,7 @@ public class Items {
     private String textContent;
     private Date judgmentDate;
     private List <ReferencedRegulation> referencedRegulations;
-    private JudgmentType judgmentType;
 
-
-    public JudgmentType getJudgmentType() {
-        return judgmentType;
-    }
-
-    public void setJudgmentType(JudgmentType judgmentType) {
-        this.judgmentType = judgmentType;
-    }
 
     public CourtType getCourtType() {
         return courtType;
@@ -35,8 +24,7 @@ public class Items {
         this.courtType = courtType;
     }
 
-    public List<CourtCases> getCourtCases()
-    {
+    public List<CourtCases> getCourtCases() {
         return this.courtCases;
     }
 
@@ -44,13 +32,11 @@ public class Items {
         this.courtCases = courtCases;
     }
 
-    public List<Judges> getJudges()
-    {
+    public List<Judges> getJudges() {
         return this.judges;
     }
 
-    public void setJudges(List<Judges> judges)
-    {
+    public void setJudges(List<Judges> judges) {
         this.judges = judges;
     }
 
@@ -76,6 +62,10 @@ public class Items {
 
     public void setReferencedRegulations(List <ReferencedRegulation> referencedRegulations) {
         this.referencedRegulations = referencedRegulations;
+    }
+
+    public String getId(){
+        return this.getCourtCases().get(0).getCaseNumber();
     }
 
 }

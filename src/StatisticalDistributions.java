@@ -2,7 +2,7 @@ import java.util.Calendar;
 
 public class StatisticalDistributions {
 
-    public void judgesPerOrder (ListOfItems items){
+    public String judgesPerOrder (ListOfItems items){
 
         int length = 0;
         for (Items item: items.getItems()){
@@ -15,9 +15,11 @@ public class StatisticalDistributions {
             tab[item.getJudges().size()]++;
         }
 
-        System.out.println("Rozkład statystyczny liczby sędziów przypadających na orzeczenie:");
-        for (int i=0; i<tab.length; i++) if(tab[i] != 0) System.out.println("Liczba sędziów: "+ i +
-                ", liczba orzeczeń: " + tab[i]);
+        String s = "Rozkład statystyczny liczby sędziów przypadających na orzeczenie:" + "\n";
+
+        for (int i=0; i<tab.length; i++) if(tab[i] != 0)
+            s += "Liczba sędziów: "+ i + ", liczba orzeczeń: " + tab[i] + "\n";
+        return s;
     }
 
     private String getMonth(int month) {
@@ -52,22 +54,21 @@ public class StatisticalDistributions {
     }
 
 
-    public void sentencesPerMonth(ListOfItems items){
+    public String sentencesPerMonth(ListOfItems items){
 
         int tab[] = new int[12];
         for (int i=0; i<tab.length; i++) tab[i] = 0;
 
         for (Items item: items.getItems()){
-            if(item.getJudgmentType().toString().equals("Wyrok")) {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(item.getJudgmentDate());
                 int month = cal.get(Calendar.MONTH);
                 tab[month]++;
-            }
         }
 
-        System.out.println("Rozkład statystyczny wyroków ze względu na miesiąc:");
-        for (int i=0; i<tab.length; i++) System.out.println(getMonth(i) + ": " + tab[i] + " wyroków");
+        String s = "Rozkład statystyczny orzeczeń ze względu na miesiąc:" + "\n";
+        for (int i=0; i<tab.length; i++) s += getMonth(i) + ": " + tab[i] + " orzeczeń" + "\n";
+        return s;
     }
 
     private String courtTypeFromInt (int i)
@@ -88,19 +89,18 @@ public class StatisticalDistributions {
 
     }
 
-    public void sentencesPerCourtType(ListOfItems items){
+    public String sentencesPerCourtType(ListOfItems items){
 
         int tab[] = new int[5];
         for (int i=0; i<tab.length; i++) tab[i] = 0;
 
         for (Items item: items.getItems()){
-            if(item.getJudgmentType().toString().equals("Wyrok")) tab[item.getCourtType().toInt()]++;
+            tab[item.getCourtType().toInt()]++;
         }
 
-        System.out.println("Rozkład statystyczny wyroków ze względu na rodzaj sądu:");
-        for (int i=0; i<tab.length; i++) System.out.println("Rodzaj sądu: " +
-                courtTypeFromInt(i)+ ", " + tab[i] + " wyroków");
-
+        String s = "Rozkład statystyczny orzeczeń ze względu na rodzaj sądu:" + "\n";
+        for (int i=0; i<tab.length; i++) s += "Rodzaj sądu: " + courtTypeFromInt(i)+ ", " + tab[i] + " orzeczeń" + "\n";
+        return s;
     }
 }
 

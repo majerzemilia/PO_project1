@@ -1,11 +1,13 @@
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+
+@JsonIgnoreProperties(value = { "text"})
 
 public class ReferencedRegulation {
     private String journalTitle;
     private int journalNo;
     private int journalYear;
     private int journalEntry;
-    private String text;
     private int numberOfOrders;
 
 
@@ -41,13 +43,6 @@ public class ReferencedRegulation {
         this.journalEntry = journalEntry;
     }
 
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
 
     public Integer getNumberOfOrders(){
         return this.numberOfOrders;
@@ -57,16 +52,13 @@ public class ReferencedRegulation {
 
         int result = 0;
 
-        String id = String.valueOf(journalNo) + "." + String.valueOf(journalYear) + "." +
-                String.valueOf(journalEntry);
+        String id = this.getId();
 
-        for(int i=0; i<items.getItems().size(); i++) {
-            for (int j=0; j<items.getItems().get(i).getReferencedRegulations().size(); j++) {
+        for(Items item: items.getItems()) {
 
-                ReferencedRegulation regulation = items.getItems().get(i).getReferencedRegulations().get(j);
+            for(ReferencedRegulation regulation: item.getReferencedRegulations()) {
 
-                String comparingId = String.valueOf(regulation.journalNo) + "." +
-                        String.valueOf(regulation.journalYear) + "." + String.valueOf(regulation.journalEntry);
+                String comparingId = regulation.getId();
 
                 if (comparingId.equals(id)){
                     result++;
@@ -75,5 +67,10 @@ public class ReferencedRegulation {
             }
         }
         numberOfOrders = result;
+    }
+
+    public String getId(){
+
+        return this.journalNo + "." + this.journalYear + "." + this.journalEntry;
     }
 }

@@ -23,10 +23,10 @@ public class TemplateItemsSystem {
             File[] listOfFiles = folder.listFiles();
             ObjectMapper mapper = new ObjectMapper();
             ListOfItems item1 = mapper.readValue(listOfFiles[0], ListOfItems.class);
-            for(int i=1; i<listOfFiles.length; i++)
+            for(File file: listOfFiles)
             {
-                if (listOfFiles[i].isFile()) {
-                    ListOfItems itemToAdd = mapper.readValue(listOfFiles[i], ListOfItems.class);
+                if (file.isFile()) {
+                    ListOfItems itemToAdd = mapper.readValue(file, ListOfItems.class);
                     item1.getItems().addAll(itemToAdd.getItems());
                 }
             }
@@ -53,60 +53,61 @@ public class TemplateItemsSystem {
                 }
             }
             Map<String,Items> redundantItems = new HashMap<>();
-            for (Items item: redundantItems1) redundantItems.put(item.getCourtCases().get(0).getCaseNumber(),item);
+            for (Items item: redundantItems1) redundantItems.put(item.getId(),item);
 
-            //Map<String,Items> items = new HashMap<>();
-            //for (Items item: item1.getItems()) items.put(item.getCourtCases().get(0).getCaseNumber(),item);
 
-            for(int i=0; i<item1.getItems().size(); i++) //setNumberOfOrders for judges
+            for(Items item: item1.getItems()) //setNumberOfOrders for judges
             {
-                for(int j=0; j<item1.getItems().get(i).getJudges().size(); j++)
-                    item1.getItems().get(i).getJudges().get(j).setNumberOfOrders(item1);
+                for(Judges judge: item.getJudges())
+                    judge.setNumberOfOrders(item1);
             }
 
-            for(int i=0; i<item1.getItems().size(); i++) //setNumberOfOrders for referencedRegulations
+            for(Items item: item1.getItems()) //setNumberOfOrders for referencedRegulations
             {
-                for(int j=0; j<item1.getItems().get(i).getReferencedRegulations().size(); j++)
-                    item1.getItems().get(i).getReferencedRegulations().get(j).setNumberOfOrders(item1);
+                for(ReferencedRegulation regulation: item.getReferencedRegulations())
+                    regulation.setNumberOfOrders(item1);
             }
 
-            System.out.println("Aby wyświetlić informacje o programie, wpisz: info. Aby zakończyć, wpisz: quit");
+            System.out.println("Aby wyświetlić listę dostępnych komend, wpisz: help. Aby zakończyć, wpisz: quit");
             String start = reader.next();
-            if (start.equals("info")) {
-                String info = "Aby wyświetlić rubrum orzeczenia o wybranej sygnaturze, wpisz: 1" + '\n'
-                        + "Aby wyświetlić uzasadnienie orzeczenia o określonej sygnaturze, wpisz: 2" + '\n'
-                        + "Aby wyświetlić liczbę orzeczeń dla wybranego sędziego, wpisz: 3" + '\n'
-                        + "Aby wyświetlić 10 sędziów, którzy wydali największą liczbę orzeczeń, wpisz: 4" + '\n'
-                        + "Aby wyświetlić rozkład statystyczny wyroków ze względu na miesiąc, wpisz: 5" + '\n'
-                        + "Aby wyświetlić rozkład statystyczny wyroków ze względu na rodzaj sądu, wpisz: 6" + '\n'
-                        + "Aby wyświetlić 10 ustaw, które są najczęściej przywoływane w orzeczeniach, wpisz: 7" + '\n'
-                        + "Aby wyświetlić rozkład statystyczny liczby sędziów przypadających na orzeczenie, wpisz: 8" + '\n';
+            if (start.equals("help")) {
+                String info = "Aby wyświetlić rubrum jednego lub wielu orzeczeń, wpisz: rubrum" + '\n'
+                        + "Aby wyświetlić uzasadnienie orzeczenia o określonej sygnaturze, wpisz: content" + '\n'
+                        + "Aby wyświetlić liczbę orzeczeń dla wybranego sędziego, wpisz: judge" + '\n'
+                        + "Aby wyświetlić 10 sędziów, którzy wydali największą liczbę orzeczeń, wpisz: judges" + '\n'
+                        + "Aby wyświetlić rozkład statystyczny orzeczeń ze względu na miesiąc, wpisz: months" + '\n'
+                        + "Aby wyświetlić rozkład statystyczny orzeczeń ze względu na rodzaj sądu, wpisz: courts" + '\n'
+                        + "Aby wyświetlić 10 ustaw, które są najczęściej przywoływane w orzeczeniach, wpisz: regulations" + '\n'
+                        + "Aby wyświetlić rozkład statystyczny liczby sędziów przypadających na orzeczenie, wpisz: jury" + '\n';
                 System.out.println(info);
 
                 while (!start.equals("quit")) {
                         start = reader.nextLine();
                         switch (start) {
-                            case "1":
-                                System.out.println("Podaj sygnaturę orzeczenia");
-                                start = reader.nextLine();
-                                System.out.println(new Rubrum(start, redundantItems).toString());
+                            case "rubrum":
+                                System.out.println("Podaj sygnatury orzeczeń oddzielone przecinkiem i spacją");
+                                String[] a = reader.nextLine().split(", ");
+                                System.out.println('\n');
+                                for(int i = 0; i < a.length; i++){
+                                    System.out.println(new Rubrum(a[i], redundantItems).toString());
+                                }
                                 break;
-                            case "2":
+                            case "content":
                                 System.out.println("Podaj sygnaturę orzeczenia");
                                 start = reader.nextLine();
                                 System.out.println(redundantItems.get(start).getTextContent());
                                 System.out.println("\n");
                                 break;
-                            case "3":
+                            case "judge":
                                 System.out.println("Podaj imię i nazwisko sędziego");
                                 start = reader.nextLine();
                                 int counter = 0;
-                                for(int i=0; i<item1.getItems().size(); i++) {
+                                for(Items item: item1.getItems()) {
                                     if (counter > 0) break;
-                                    for(int j=0; j<item1.getItems().get(i).getJudges().size(); j++) {
-                                        if(item1.getItems().get(i).getJudges().get(j).getName().equals(start)) {
+                                    for(Judges judge: item.getJudges()) {
+                                        if(judge.getName().equals(start)) {
                                             System.out.println("Liczba orzeczeń: " +
-                                                    item1.getItems().get(i).getJudges().get(j).getNumberOfOrders());
+                                                    judge.getNumberOfOrders());
                                             counter++;
                                             break;
                                         }
@@ -114,33 +115,28 @@ public class TemplateItemsSystem {
                                 }
                                 System.out.println("\n");
                                 break;
-                            case "4":
-                                new Top10Statistics(item1).tenJudges();
-                                System.out.println("\n");
+                            case "judges":
+                                System.out.println(new Top10Statistics(item1).tenJudges());
                                 break;
-                            case "5":
-                                new StatisticalDistributions().sentencesPerMonth(item1);
-                                System.out.println("\n");
+                            case "months":
+                                System.out.println(new StatisticalDistributions().sentencesPerMonth(item1));
                                 break;
-                            case "6":
-                                new StatisticalDistributions().sentencesPerCourtType(item1);
-                                System.out.println("\n");
+                            case "courts":
+                                System.out.println(new StatisticalDistributions().sentencesPerCourtType(item1));
                                 break;
-                            case "7":
-                                new Top10Statistics(item1).tenReferencedRegulations();
-                                System.out.println("\n");
+                            case "regulations":
+                                System.out.println(new Top10Statistics(item1).tenReferencedRegulations());
+                            break;
+                            case "jury":
+                                System.out.println(new StatisticalDistributions().judgesPerOrder(item1));
                                 break;
-                            case "8":
-                                new StatisticalDistributions().judgesPerOrder(item1);
-                                System.out.println("\n");
-                                break;
-                            case "info":
+                            case "help":
                                 System.out.println(info);
                                 break;
                             case "quit":
                                 return;
                             default:
-                                System.out.println("Podaj numer z zakresu 1 - 8 lub wpisz: info");
+                                System.out.println("Podaj odpowiednią komendę lub wpisz: help" + "\n");
                                 break;
                         }
                 }

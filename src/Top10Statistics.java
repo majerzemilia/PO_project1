@@ -13,9 +13,9 @@ public class Top10Statistics {
     private void setJudges(ListOfItems items) {
 
         List<Judges> judges = new LinkedList<>();
-        for (int i = 0; i < items.getItems().size(); i++) {
+        for(Items item: items.getItems()){
 
-            judges.addAll(items.getItems().get(i).getJudges());
+            judges.addAll(item.getJudges());
         }
         this.judges = judges;
     }
@@ -23,15 +23,15 @@ public class Top10Statistics {
     private void setReferencedRegulations(ListOfItems items){
 
         List<ReferencedRegulation> regulations = new LinkedList<>();
-        for (int i = 0; i < items.getItems().size(); i++) {
+        for (Items item: items.getItems()) {
 
-            regulations.addAll(items.getItems().get(i).getReferencedRegulations());
+            regulations.addAll(item.getReferencedRegulations());
         }
         this.regulations = regulations;
     }
 
 
-    public void tenJudges() {
+    public String tenJudges() {
 
         List<Judges> result = new LinkedList<>(judges);
 
@@ -39,20 +39,23 @@ public class Top10Statistics {
                 Comparator.comparing(Judges::getNumberOfOrders).reversed().thenComparing(Judges::getName);
         result.sort(comparator);
 
-        System.out.println("10 sędziów, którzy wydali największą liczbę orzeczeń:");
-        System.out.println(result.get(0).getName() + " - Liczba orzeczeń: " + result.get(0).getNumberOfOrders());
+        String s = "10 sędziów, którzy wydali największą liczbę orzeczeń:" + "\n";
+        s += result.get(0).getName() + " - Liczba orzeczeń: " + result.get(0).getNumberOfOrders() + "\n";
 
         int counter = 1;
         for (int i=1; i<result.size(); i++){
+
             if(!result.get(i).getName().equals(result.get(i-1).getName())){
-                System.out.println(result.get(i).getName() + " - Liczba orzeczeń: " + result.get(i).getNumberOfOrders());
+
+                s += result.get(i).getName() + " - Liczba orzeczeń: " + result.get(i).getNumberOfOrders() + "\n";
                 counter++;
                 if (counter == 10) break;
             }
         }
+        return s;
     }
 
-    public void tenReferencedRegulations(){
+    public String tenReferencedRegulations(){
 
         List <ReferencedRegulation> result = new LinkedList<>(regulations);
 
@@ -62,25 +65,22 @@ public class Top10Statistics {
                         thenComparing(ReferencedRegulation::getJournalEntry);
         result.sort(comparator);
 
-        System.out.println("10 ustaw, które są najczęściej przywoływane w orzeczeniach:");
-        System.out.println(result.get(0).getJournalTitle() + " - Liczba wystąpień: " + result.get(0).getNumberOfOrders());
+        String s = "10 ustaw, które są najczęściej przywoływane w orzeczeniach:" + "\n";
+        s += result.get(0).getJournalTitle() + " - Liczba wystąpień: " + result.get(0).getNumberOfOrders() + "\n";
 
         int counter = 1;
         for (int i=1; i<result.size(); i++){
 
-            String i_id = String.valueOf(result.get(i).getJournalNo()) + "." + //id of regulation in the loop for i
-                    String.valueOf(result.get(i).getJournalYear()) + "." +
-                    String.valueOf(result.get(i).getJournalEntry());
-            String i1_id = String.valueOf(result.get(i - 1).getJournalNo()) + "." + //id of regulation in the loop for i-1
-                    String.valueOf(result.get(i - 1).getJournalYear()) + "." +
-                    String.valueOf(result.get(i - 1).getJournalEntry());
+            String i_id = result.get(i).getId();
+            String i1_id = result.get(i-1).getId();
 
             if(!i_id.equals(i1_id)){
-                System.out.println(result.get(i).getJournalTitle() + " - Liczba wystąpień: " + result.get(i).getNumberOfOrders());
+                s += result.get(i).getJournalTitle() + " - Liczba wystąpień: " + result.get(i).getNumberOfOrders() + "\n";
                 counter++;
                 if (counter == 10) break;
             }
         }
+        return s;
     }
 
 }

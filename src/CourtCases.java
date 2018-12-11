@@ -1,6 +1,6 @@
 public class CourtCases {
 
-    public String caseNumber;
+    private String caseNumber;
 
     public String getCaseNumber() {
         return caseNumber;

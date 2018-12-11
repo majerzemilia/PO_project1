@@ -33,10 +33,10 @@ public class Judges {
     public void setNumberOfOrders(ListOfItems items){
 
         int result = 0;
-        for(int i=0; i<items.getItems().size(); i++) {
-            for (int j=0; j<items.getItems().get(i).getJudges().size(); j++) {
+        for(Items item: items.getItems()) {
+            for(Judges judge: item.getJudges()){
 
-                if (items.getItems().get(i).getJudges().get(j).getName().equals(name)){
+                if (judge.getName().equals(name)){
                     result++;
                     break;
                 }
