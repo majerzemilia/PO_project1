@@ -17,7 +17,7 @@ public class Rubrum {
         this.judges = items.get(key).getJudges();
     }
 
-    private String squad(List<Judges> judges){
+    private String squad(List<Judges> judges) {
 
         String result = "";
         for (Judges judge: judges){

@@ -1,4 +1,5 @@
 import java.util.Calendar;
+import java.util.Map;
 
 public class StatisticalDistributions {
 
@@ -100,6 +101,52 @@ public class StatisticalDistributions {
 
         String s = "Rozkład statystyczny orzeczeń ze względu na rodzaj sądu:" + "\n";
         for (int i=0; i<tab.length; i++) s += "Rodzaj sądu: " + courtTypeFromInt(i)+ ", " + tab[i] + " orzeczeń" + "\n";
+        return s;
+    }
+
+    public String numberOfOrdersPerJudge(ListOfItems items, String name){
+
+        int counter = 0;
+        String s = "Liczba orzeczeń: ";
+        for(Items item: items.getItems()) {
+            if (counter > 0) break;
+            for(Judges judge: item.getJudges()) {
+                if(judge.getName().equals(name)) {
+                    s += judge.getNumberOfOrders() + "\n";
+                    counter++;
+                    break;
+                }
+            }
+        }
+        if(!s.equals("Liczba orzeczeń: ")) return s;
+        return "Podano niepoprawne dane osobowe, poprawna forma to imię i nazwisko sędziego oddzielone spacją " +
+                "(rozróżniana jest wielkość liter)." + "\n" + "Wywołaj komendę ponownie i podaj poprawne dane." + "\n";
+    }
+
+    public String printTextContent(Map<String, Items> redundantItems, String sign){
+
+        String s = "";
+        if(redundantItems.containsKey(sign)) {
+            s += redundantItems.get(sign).getTextContent() + "\n";
+        }
+        else s += sign + " nie jest poprawną sygnaturą, poprawna sygnatura " +
+                "to np. KIO 276/14." + "\n" + "Wywołaj komendę ponownie i podaj poprawne dane."
+                + "\n";
+        return s;
+    }
+
+
+    public String rubrumResult(Map<String, Items> redundantItems, String[] a){
+
+        String s = "";
+        for(int i = 0; i < a.length; i++){
+            if(redundantItems.containsKey(a[i])){
+                s += new Rubrum(a[i], redundantItems).toString() + "\n";
+            }
+            else s += a[i] + " nie jest poprawną sygnaturą, poprawna sygnatura " +
+                    "to np. KIO 276/14." + "\n" + "Wywołaj komendę ponownie i podaj poprawne dane."
+                    + "\n" + "\n";
+        }
         return s;
     }
 }
