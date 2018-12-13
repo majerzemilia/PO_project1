@@ -1,5 +1,3 @@
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -11,27 +9,23 @@ public class TemplateItemsSystem {
         try {
             Scanner reader = new Scanner(System.in);
 
-            ListOfItems item1 = new Helper().prepareListOfItems(reader);
+            ListOfItems items = new Helper().prepareListOfItems(reader);
 
-            List <Items> redundantItems1 = new Helper().prepareRedundantItems(item1);
+            Map<String,Items> redundantItems = new Helper().prepareRedundantItems(items);
 
-            Map<String,Items> redundantItems = new HashMap<>();
-            for (Items item: redundantItems1) redundantItems.put(item.getId(),item);
-
-
-            for(Items item: item1.getItems()) //setNumberOfOrders for judges
+            for(Items item: items.getItems()) //setNumberOfOrders for judges
             {
                 for(Judges judge: item.getJudges())
-                    judge.setNumberOfOrders(item1);
+                    judge.setNumberOfOrders(items);
             }
 
-            for(Items item: item1.getItems()) //setNumberOfOrders for referencedRegulations
+            for(Items item: items.getItems()) //setNumberOfOrders for referencedRegulations
             {
                 for(ReferencedRegulation regulation: item.getReferencedRegulations())
-                    regulation.setNumberOfOrders(item1);
+                    regulation.setNumberOfOrders(items);
             }
 
-           new Helper().printAndSplit(reader, redundantItems, item1);
+           new Helper().printAndSplit(reader, redundantItems, items);
         }
         catch(IllegalArgumentException ex){
             System.out.println(ex.toString());
