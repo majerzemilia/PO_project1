@@ -1,19 +1,28 @@
 import java.util.Calendar;
-import java.util.Map;
 
-public class StatisticalDistributions {
+public class StatisticalDistributions{
 
-    public String judgesPerOrder (ListOfItems items){
+    private ListOfItems items;
+
+    StatisticalDistributions(ListOfItems items){
+
+        this.items = items;
+    }
+
+    public String judgesPerOrder (){
 
         int length = 0;
         for (Items item: items.getItems()){
-            if (item.getJudges().size() > length) length = item.getJudges().size();
+            if(item.getJudges() != null) {
+                if (item.getJudges().size() > length) length = item.getJudges().size();
+            }
         }
 
         int tab[] = new int[length+1];
         for (int i=0; i<tab.length; i++) tab[i] = 0;
         for (Items item: items.getItems()){
-            tab[item.getJudges().size()]++;
+            if(item.getJudges() != null) tab[item.getJudges().size()]++;
+            else tab[0]++;
         }
 
         String s = "Rozkład statystyczny liczby sędziów przypadających na orzeczenie:" + "\n";
@@ -23,9 +32,9 @@ public class StatisticalDistributions {
         return s;
     }
 
-    private String getMonth(int month) {
+    private String getMonth(int month){
 
-        switch (month) {
+        switch (month){
             case 0:
                 return "Styczeń";
             case 1:
@@ -55,12 +64,13 @@ public class StatisticalDistributions {
     }
 
 
-    public String sentencesPerMonth(ListOfItems items){
+    public String sentencesPerMonth(){
 
         int tab[] = new int[12];
         for (int i=0; i<tab.length; i++) tab[i] = 0;
 
         for (Items item: items.getItems()){
+
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(item.getJudgmentDate());
                 int month = cal.get(Calendar.MONTH);
@@ -68,13 +78,13 @@ public class StatisticalDistributions {
         }
 
         String s = "Rozkład statystyczny orzeczeń ze względu na miesiąc:" + "\n";
-        for (int i=0; i<tab.length; i++) s += getMonth(i) + ": " + tab[i] + " orzeczeń" + "\n";
+        for (int i=0; i<tab.length; i++) s += "Miesiąc: " + getMonth(i) + ", liczba orzeczeń: " + tab[i] + "\n";
         return s;
     }
 
-    private String courtTypeFromInt (int i)
-    {
-        switch(i) {
+    private String courtTypeFromInt(int i){
+
+        switch(i){
             case 0:
                 return "Sąd powszechny";
             case 1:
@@ -85,14 +95,18 @@ public class StatisticalDistributions {
                 return "Trybunał Konstytucyjny";
             case 4:
                 return "Krajowa Izba Odwoławcza";
+            case 5:
+                return "Wojewódzki Sąd Administracyjny";
+            case 6:
+                return "Naczelny Sąd Administracyjny";
         }
         return null;
 
     }
 
-    public String sentencesPerCourtType(ListOfItems items){
+    public String sentencesPerCourtType(){
 
-        int tab[] = new int[5];
+        int tab[] = new int[7];
         for (int i=0; i<tab.length; i++) tab[i] = 0;
 
         for (Items item: items.getItems()){
@@ -100,18 +114,23 @@ public class StatisticalDistributions {
         }
 
         String s = "Rozkład statystyczny orzeczeń ze względu na rodzaj sądu:" + "\n";
-        for (int i=0; i<tab.length; i++) s += "Rodzaj sądu: " + courtTypeFromInt(i)+ ", " + tab[i] + " orzeczeń" + "\n";
+        for (int i=0; i<tab.length; i++) s += "Rodzaj sądu: " + courtTypeFromInt(i)+ ", liczba orzeczeń: " + tab[i] + "\n";
         return s;
     }
 
-    public String numberOfOrdersPerJudge(ListOfItems items, String name){
+    public String numberOfOrdersPerJudge(String name){
 
         int counter = 0;
         String s = "Liczba orzeczeń: ";
-        for(Items item: items.getItems()) {
+
+        for(Items item: items.getItems()){
+
             if (counter > 0) break;
-            for(Judges judge: item.getJudges()) {
-                if(judge.getName().equals(name)) {
+
+            for(Judges judge: item.getJudges()){
+
+                if(judge.getName().equals(name)){
+
                     s += judge.getNumberOfOrders() + "\n";
                     counter++;
                     break;
@@ -121,33 +140,6 @@ public class StatisticalDistributions {
         if(!s.equals("Liczba orzeczeń: ")) return s;
         return "Podano niepoprawne dane osobowe, poprawna forma to imię i nazwisko sędziego oddzielone spacją " +
                 "(rozróżniana jest wielkość liter)." + "\n" + "Wywołaj komendę ponownie i podaj poprawne dane." + "\n";
-    }
-
-    public String printTextContent(Map<String, Items> redundantItems, String sign){
-
-        String s = "";
-        if(redundantItems.containsKey(sign)) {
-            s += redundantItems.get(sign).getTextContent() + "\n";
-        }
-        else s += sign + " nie jest poprawną sygnaturą, poprawna sygnatura " +
-                "to np. KIO 276/14." + "\n" + "Wywołaj komendę ponownie i podaj poprawne dane."
-                + "\n";
-        return s;
-    }
-
-
-    public String rubrumResult(Map<String, Items> redundantItems, String[] a){
-
-        String s = "";
-        for(int i = 0; i < a.length; i++){
-            if(redundantItems.containsKey(a[i])){
-                s += new Rubrum(a[i], redundantItems).toString() + "\n";
-            }
-            else s += a[i] + " nie jest poprawną sygnaturą, poprawna sygnatura " +
-                    "to np. KIO 276/14." + "\n" + "Wywołaj komendę ponownie i podaj poprawne dane."
-                    + "\n" + "\n";
-        }
-        return s;
     }
 }
 

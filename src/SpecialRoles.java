@@ -1,4 +1,4 @@
-public enum SpecialRoles {
+public enum SpecialRoles{
 
     PRESIDING_JUDGE, // przewodniczacy składu sędziowskiego
     REPORTING_JUDGE, // sędzia sprawozdawca
@@ -6,7 +6,7 @@ public enum SpecialRoles {
 
     public String toString()
     {
-        switch(this) {
+        switch(this){
             case PRESIDING_JUDGE:
                 return "- Przewodnicząca/y składu sędziowskiego";
             case REPORTING_JUDGE:

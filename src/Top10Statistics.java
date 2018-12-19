@@ -1,21 +1,21 @@
 import java.util.*;
 
-public class Top10Statistics {
+public class Top10Statistics{
 
     private List<Judges> judges;
     private List<ReferencedRegulation> regulations;
 
-    Top10Statistics(ListOfItems items) {
+    Top10Statistics(ListOfItems items){
         setJudges(items);
         setReferencedRegulations(items);
     }
 
-    private void setJudges(ListOfItems items) {
+    private void setJudges(ListOfItems items){
 
         List<Judges> judges = new LinkedList<>();
         for(Items item: items.getItems()){
 
-            judges.addAll(item.getJudges());
+            if(item.getJudges() != null) judges.addAll(item.getJudges());
         }
         this.judges = judges;
     }
@@ -23,15 +23,17 @@ public class Top10Statistics {
     private void setReferencedRegulations(ListOfItems items){
 
         List<ReferencedRegulation> regulations = new LinkedList<>();
-        for (Items item: items.getItems()) {
+        for (Items item: items.getItems()){
 
-            regulations.addAll(item.getReferencedRegulations());
+            if(item.getReferencedRegulations() != null){
+                regulations.addAll(item.getReferencedRegulations());
+            }
         }
         this.regulations = regulations;
     }
 
 
-    public String tenJudges() {
+    public String tenJudges(){
 
         List<Judges> result = new LinkedList<>(judges);
 
@@ -72,9 +74,11 @@ public class Top10Statistics {
         for (int i=1; i<result.size(); i++){
 
             String i_id = result.get(i).getId();
+            String i_id_text = result.get(i).getJournalTitle();
             String i1_id = result.get(i-1).getId();
+            String i1_id_text = result.get(i-1).getJournalTitle();
 
-            if(!i_id.equals(i1_id)){
+            if(!i_id.equals(i1_id) && !i_id_text.equals(i1_id_text)){
                 s += result.get(i).getJournalTitle() + " - Liczba wystąpień: " + result.get(i).getNumberOfOrders() + "\n";
                 counter++;
                 if (counter == 10) break;
