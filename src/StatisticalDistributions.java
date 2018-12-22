@@ -1,40 +1,51 @@
+import jline.console.ConsoleReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.Calendar;
 
-public class StatisticalDistributions{
+public class StatisticalDistributions {
 
     private ListOfItems items;
 
-    StatisticalDistributions(ListOfItems items){
+    StatisticalDistributions(ListOfItems items) {
 
         this.items = items;
     }
 
-    public String judgesPerOrder (){
+    private String judgesPerOrder(BufferedWriter writer) throws IOException {
 
+        if (writer != null) writer.write("judges" + "\r\n");
         int length = 0;
-        for (Items item: items.getItems()){
-            if(item.getJudges() != null) {
+        for (Items item : items.getItems()) {
+            if (item.getJudges() != null) {
                 if (item.getJudges().size() > length) length = item.getJudges().size();
             }
         }
 
-        int tab[] = new int[length+1];
-        for (int i=0; i<tab.length; i++) tab[i] = 0;
-        for (Items item: items.getItems()){
-            if(item.getJudges() != null) tab[item.getJudges().size()]++;
+        int tab[] = new int[length + 1];
+        for (int i = 0; i < tab.length; i++) tab[i] = 0;
+        for (Items item : items.getItems()) {
+            if (item.getJudges() != null) tab[item.getJudges().size()]++;
             else tab[0]++;
         }
 
-        String s = "Rozkład statystyczny liczby sędziów przypadających na orzeczenie:" + "\n";
+        String s = "Rozkład statystyczny liczby sędziów przypadających na orzeczenie:" + "\r\n";
 
-        for (int i=0; i<tab.length; i++) if(tab[i] != 0)
-            s += "Liczba sędziów: "+ i + ", liczba orzeczeń: " + tab[i] + "\n";
+        for (int i = 0; i < tab.length; i++)
+            if (tab[i] != 0)
+                s += "Liczba sędziów: " + i + ", liczba orzeczeń: " + tab[i] + "\r\n";
+        if (writer != null) writer.write(s + "\r\n");
         return s;
     }
 
-    private String getMonth(int month){
+    public String getJudgesPerOrder(BufferedWriter writer) throws IOException {
 
-        switch (month){
+        return judgesPerOrder(writer);
+    }
+
+    private String getMonth(int month) {
+
+        switch (month) {
             case 0:
                 return "Styczeń";
             case 1:
@@ -64,27 +75,34 @@ public class StatisticalDistributions{
     }
 
 
-    public String sentencesPerMonth(){
+    private String sentencesPerMonth(BufferedWriter writer) throws IOException {
 
+        if (writer != null) writer.write("months" + "\r\n");
         int tab[] = new int[12];
-        for (int i=0; i<tab.length; i++) tab[i] = 0;
+        for (int i = 0; i < tab.length; i++) tab[i] = 0;
 
-        for (Items item: items.getItems()){
+        for (Items item : items.getItems()) {
 
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(item.getJudgmentDate());
-                int month = cal.get(Calendar.MONTH);
-                tab[month]++;
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(item.getJudgmentDate());
+            int month = cal.get(Calendar.MONTH);
+            tab[month]++;
         }
 
-        String s = "Rozkład statystyczny orzeczeń ze względu na miesiąc:" + "\n";
-        for (int i=0; i<tab.length; i++) s += "Miesiąc: " + getMonth(i) + ", liczba orzeczeń: " + tab[i] + "\n";
+        String s = "Rozkład statystyczny orzeczeń ze względu na miesiąc:" + "\r\n";
+        for (int i = 0; i < tab.length; i++) s += "Miesiąc: " + getMonth(i) + ", liczba orzeczeń: " + tab[i] + "\r\n";
+        if (writer != null) writer.write(s + "\r\n");
         return s;
     }
 
-    private String courtTypeFromInt(int i){
+    public String getSentencesPerMonth(BufferedWriter writer) throws IOException {
 
-        switch(i){
+        return sentencesPerMonth(writer);
+    }
+
+    private String courtTypeFromInt(int i) {
+
+        switch (i) {
             case 0:
                 return "Sąd powszechny";
             case 1:
@@ -104,42 +122,69 @@ public class StatisticalDistributions{
 
     }
 
-    public String sentencesPerCourtType(){
+    private String sentencesPerCourtType(BufferedWriter writer) throws IOException {
 
+        if (writer != null) writer.write("courts" + "\r\n");
         int tab[] = new int[7];
-        for (int i=0; i<tab.length; i++) tab[i] = 0;
+        for (int i = 0; i < tab.length; i++) tab[i] = 0;
 
-        for (Items item: items.getItems()){
+        for (Items item : items.getItems()) {
             tab[item.getCourtType().toInt()]++;
         }
 
-        String s = "Rozkład statystyczny orzeczeń ze względu na rodzaj sądu:" + "\n";
-        for (int i=0; i<tab.length; i++) s += "Rodzaj sądu: " + courtTypeFromInt(i)+ ", liczba orzeczeń: " + tab[i] + "\n";
+        String s = "Rozkład statystyczny orzeczeń ze względu na rodzaj sądu:" + "\r\n";
+        for (int i = 0; i < tab.length; i++)
+            s += "Rodzaj sądu: " + courtTypeFromInt(i) + ", liczba orzeczeń: " + tab[i] + "\r\n";
+        if (writer != null) writer.write(s + "\r\n");
         return s;
     }
 
-    public String numberOfOrdersPerJudge(String name){
+    public String getSentencesPerCourtType(BufferedWriter writer) throws IOException {
 
+        return sentencesPerCourtType(writer);
+    }
+
+    private String numberOfOrdersPerJudge(ConsoleReader reader, BufferedWriter writer) throws IOException {
+
+        if (writer != null) writer.write("judge" + "\r\n");
+        System.out.println("Podaj imię i nazwisko sędziego");
+        String name = reader.readLine();
+        if (writer != null) writer.write(name + "\r\n");
         int counter = 0;
         String s = "Liczba orzeczeń: ";
 
-        for(Items item: items.getItems()){
+        for (Items item : items.getItems()) {
 
             if (counter > 0) break;
 
-            for(Judges judge: item.getJudges()){
+            if (item.getJudges() == null) break;
 
-                if(judge.getName().equals(name)){
+            for (Judges judge : item.getJudges()) {
 
-                    s += judge.getNumberOfOrders() + "\n";
+                if (judge.getName().equals(name)) {
+
+                    s += judge.getNumberOfOrders() + "\r\n";
                     counter++;
                     break;
                 }
             }
+
         }
-        if(!s.equals("Liczba orzeczeń: ")) return s;
-        return "Podano niepoprawne dane osobowe, poprawna forma to imię i nazwisko sędziego oddzielone spacją " +
-                "(rozróżniana jest wielkość liter)." + "\n" + "Wywołaj komendę ponownie i podaj poprawne dane." + "\n";
+        if (!s.equals("Liczba orzeczeń: ")) {
+            if (writer != null) writer.write(s + "\r\n");
+            return s;
+        } else {
+            s = "Podano niedostępne w bazie sędziów lub niepoprawne dane osobowe, poprawna forma to imię i nazwisko " +
+                    "sędziego oddzielone spacją (rozróżniana jest wielkość liter)." + "\r\n" + "Wywołaj komendę ponownie " +
+                    "i podaj poprawne dane." + "\r\n";
+            if (writer != null) writer.write(s + "\r\n");
+            return s;
+
+        }
+    }
+
+    public String getNumberOfOrdersPerJudge(ConsoleReader reader, BufferedWriter writer) throws IOException {
+        return numberOfOrdersPerJudge(reader, writer);
     }
 }
 

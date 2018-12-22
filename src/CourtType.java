@@ -1,4 +1,4 @@
-public enum CourtType{
+public enum CourtType {
 
     COMMON, // sąd powszechny
     SUPREME, // Sąd Najwyższy
@@ -8,9 +8,8 @@ public enum CourtType{
     Wojewódzki_Sąd_Administracyjny,
     Naczelny_Sąd_Administracyjny;
 
-    public String toString()
-    {
-        switch(this){
+    public String toString() {
+        switch (this) {
             case COMMON:
                 return "Sąd powszechny";
             case SUPREME:
@@ -29,9 +28,8 @@ public enum CourtType{
         return null;
     }
 
-    public int toInt()
-    {
-        switch(this){
+    public int toInt() {
+        switch (this) {
             case COMMON:
                 return 0;
             case SUPREME:

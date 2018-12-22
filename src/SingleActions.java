@@ -1,42 +1,81 @@
+import jline.console.ConsoleReader;
+import org.jline.reader.LineReader;
+
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.Map;
+import java.util.Scanner;
 
 public class SingleActions {
 
     private Map<String, Items> redundantItems;
 
-    SingleActions(Map<String, Items> redundantItems){
+    SingleActions(Map<String, Items> redundantItems) {
 
         this.redundantItems = redundantItems;
     }
 
-    public String printTextContent(String sign){
+    private String help(String action) {
 
-        String s = "";
-        if(redundantItems.containsKey(sign)) {
-            s += redundantItems.get(sign).getTextContent() + "\n";
+        switch (action) {
+            case "rubrum":
+                System.out.println("Podaj sygnatury orzeczeń oddzielone przecinkiem i spacją");
+                break;
+            case "content":
+                System.out.println("Podaj sygnaturę orzeczenia");
+                break;
         }
-        else s += sign + " nie jest poprawną sygnaturą, poprawna sygnatura " +
-                "to np. KIO 276/14." + "\n" + "Wywołaj komendę ponownie i podaj poprawne dane."
-                + "\n";
-        return s;
+        return null;
     }
 
 
-    public String rubrumResult(String[] a){
+    private String extractedTextContent(ConsoleReader reader, BufferedWriter writer) throws IOException {
 
+        help("content");
+        if (writer != null) writer.write("content" + "\r\n");
+        String sign = reader.readLine();
+        if (writer != null) writer.write(sign + "\r\n");
         String s = "";
-        for(int i = 0; i < a.length; i++){
-            if(redundantItems.containsKey(a[i])){
-                s += new Rubrum(a[i], redundantItems).toString() + "\n";
-            }
-            else s += a[i] + " nie jest poprawną sygnaturą, poprawna sygnatura " +
-                    "to np. KIO 276/14." + "\n" + "Wywołaj komendę ponownie i podaj poprawne dane."
-                    + "\n" + "\n";
-        }
+        if (redundantItems.containsKey(sign)) {
+            s += redundantItems.get(sign).getTextContent() + "\r\n" + "\r\n";
+        } else
+            s += sign + " nie jest dostępna w bazie orzeczeń lub nie jest poprawną sygnaturą, poprawna sygnatura " +
+                    "to np. KIO 276/14." + "\r\n" + "Wywołaj komendę ponownie i podaj poprawne dane."
+                    + "\r\n";
+        if (writer != null) writer.write(s);
         return s;
     }
 
-    public String info (){
+    public String getExtractedTextContent(ConsoleReader reader, BufferedWriter writer) throws IOException {
+        return extractedTextContent(reader, writer);
+    }
+
+
+    private String rubrumResult(ConsoleReader reader, BufferedWriter writer) throws IOException {
+
+        help("rubrum");
+        if (writer != null) writer.write("rubrum" + "\r\n");
+        String[] a = reader.readLine().split(", ");
+        for (String str : a) writer.write(str + " ");
+        if (writer != null) writer.write("\r\n");
+        String s = "";
+        for (int i = 0; i < a.length; i++) {
+            if (redundantItems.containsKey(a[i])) {
+                s += new Rubrum(a[i], redundantItems).toString() + "\r\n";
+            } else
+                s += a[i] + " nie jest dostępna w bazie orzeczeń lub nie jest poprawną sygnaturą, poprawna sygnatura " +
+                        "to np. KIO 276/14." + "\r\n" + "Wywołaj komendę ponownie i podaj poprawne dane."
+                        + "\r\n" + "\r\n";
+        }
+        if (writer != null) writer.write(s);
+        return s;
+    }
+
+    public String getRubrumResult(ConsoleReader reader, BufferedWriter writer) throws IOException {
+        return rubrumResult(reader, writer);
+    }
+
+    public String info() {
 
         return "Aby wyświetlić rubrum jednego lub wielu orzeczeń, wpisz: rubrum" + "\n"
                 + "Aby wyświetlić uzasadnienie orzeczenia o określonej sygnaturze, wpisz: content" + "\n"

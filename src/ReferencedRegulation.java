@@ -1,9 +1,9 @@
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
-@JsonIgnoreProperties(value = { "text"})
+@JsonIgnoreProperties(value = {"text"})
 
-public class ReferencedRegulation{
+public class ReferencedRegulation {
 
     private String journalTitle;
     private int journalNo;
@@ -12,58 +12,58 @@ public class ReferencedRegulation{
     private int numberOfOrders;
 
 
-    public String getJournalTitle(){
+    public String getJournalTitle() {
         return journalTitle;
     }
 
-    public void setJournalTitle(String journalTitle){
+    public void setJournalTitle(String journalTitle) {
         this.journalTitle = journalTitle;
     }
 
-    public int getJournalNo(){
+    public int getJournalNo() {
         return journalNo;
     }
 
-    public void setJournalNo(int journalNo){
+    public void setJournalNo(int journalNo) {
         this.journalNo = journalNo;
     }
 
-    public int getJournalYear(){
+    public int getJournalYear() {
         return journalYear;
     }
 
-    public void setJournalYear(int journalYear){
+    public void setJournalYear(int journalYear) {
         this.journalYear = journalYear;
     }
 
-    public int getJournalEntry(){
+    public int getJournalEntry() {
         return journalEntry;
     }
 
-    public void setJournalEntry(int journalEntry){
+    public void setJournalEntry(int journalEntry) {
         this.journalEntry = journalEntry;
     }
 
-    public Integer getNumberOfOrders(){
+    public Integer getNumberOfOrders() {
         return this.numberOfOrders;
     }
 
-    public void setNumberOfOrders(ListOfItems items){
+    public void setNumberOfOrders(ListOfItems items) {
 
         int result = 0;
 
         String id = this.getId();
 
-        for(Items item: items.getItems()){
+        for (Items item : items.getItems()) {
 
-            if(item.getReferencedRegulations() != null){
-                for (ReferencedRegulation regulation : item.getReferencedRegulations()){
+            if (item.getReferencedRegulations() != null) {
+                for (ReferencedRegulation regulation : item.getReferencedRegulations()) {
 
                     String comparingId;
-                    if(this.getJournalYear() == 0) comparingId = regulation.getJournalTitle();
+                    if (this.getJournalYear() == 0) comparingId = regulation.getJournalTitle();
                     else comparingId = regulation.getId();
 
-                    if (comparingId.equals(id)){
+                    if (comparingId.equals(id)) {
                         result++;
                         break;
                     }
@@ -73,9 +73,9 @@ public class ReferencedRegulation{
         numberOfOrders = result;
     }
 
-    public String getId(){
+    public String getId() {
 
-        if(this.journalYear != 0) return this.journalNo + "." + this.journalYear + "." + this.journalEntry;
+        if (this.journalYear != 0) return this.journalNo + "." + this.journalYear + "." + this.journalEntry;
         else return this.getJournalTitle();
     }
 }

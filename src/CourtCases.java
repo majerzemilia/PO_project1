@@ -1,4 +1,4 @@
-public class CourtCases{
+public class CourtCases {
 
     private String caseNumber;
 
