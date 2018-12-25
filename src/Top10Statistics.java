@@ -45,6 +45,11 @@ public class Top10Statistics {
         result.sort(comparator);
 
         String s = "10 sędziów, którzy wydali największą liczbę orzeczeń:" + "\r\n";
+        if (result.size() == 0) {
+            s += "Brak dostępnych sędziów" + "\r\n";
+            if (writer != null) writer.write(s + "\r\n");
+            return s;
+        }
         s += result.get(0).getName() + " - Liczba orzeczeń: " + result.get(0).getNumberOfOrders() + "\r\n";
 
         int counter = 1;
@@ -77,6 +82,12 @@ public class Top10Statistics {
         result.sort(comparator);
 
         String s = "10 ustaw, które są najczęściej przywoływane w orzeczeniach:" + "\r\n";
+        if(result.size() == 0) {
+            s += "Brak dostępnych ustaw" + "\r\n";
+            if (writer != null) writer.write(s + "\r\n");
+            return s;
+        }
+
         s += result.get(0).getJournalTitle() + " - Liczba wystąpień: " + result.get(0).getNumberOfOrders() + "\r\n";
 
         int counter = 1;

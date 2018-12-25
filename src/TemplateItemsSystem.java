@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class TemplateItemsSystem {
 
-    public static void main(String[] args) {
+    public static void main(String[] args){
 
         try {
             ConsoleReader reader = new ConsoleReader(System.in, System.out);

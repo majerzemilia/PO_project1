@@ -2,10 +2,10 @@ import java.io.File;
 
 abstract class AbstractPreparer {
 
-    public File[] prepareListOfFiles(String path1) throws IllegalArgumentException {
+    public File[] prepareListOfFiles(String path) throws IllegalArgumentException {
 
 
-        File folder = new File(path1);
+        File folder = new File(path);
         if (!folder.isDirectory()) {
             throw new IllegalArgumentException("Podano niepoprawną ścieżkę do folderu. Uruchom program ponownie, " +
                     "podając ścieżkę do folderu zawierającego poprawne pliki." + "\n");

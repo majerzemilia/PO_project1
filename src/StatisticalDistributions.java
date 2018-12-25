@@ -31,9 +31,13 @@ public class StatisticalDistributions {
 
         String s = "Rozkład statystyczny liczby sędziów przypadających na orzeczenie:" + "\r\n";
 
+        boolean flag = true;
         for (int i = 0; i < tab.length; i++)
-            if (tab[i] != 0)
+            if (tab[i] != 0) {
                 s += "Liczba sędziów: " + i + ", liczba orzeczeń: " + tab[i] + "\r\n";
+                flag = false;
+            }
+        if (flag == true) s += "Brak dostępnych sędziów" + "\r\n";
         if (writer != null) writer.write(s + "\r\n");
         return s;
     }

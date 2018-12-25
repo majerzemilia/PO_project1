@@ -10,27 +10,27 @@ import java.io.IOException;
 import java.util.*;
 
 
-public class Preparer extends AbstractPreparer {
+public class Preparer extends  AbstractPreparer{
 
     public ListOfItems prepareListOfJsonItems(ConsoleReader reader) throws IllegalArgumentException, IOException {
 
         System.out.println("Podaj ścieżkę do folderu zawierającego pliki w formacie JSON. Jeśli nie chcesz wczytywać" +
-                " plików w formacie JSON, wpisz: next");
+                " plików w formacie JSON, wpisz: next" );
 
-        String path1 = reader.readLine();
+        String path = reader.readLine();
 
         ListOfItems item1 = new ListOfItems();
         item1.setItems(new LinkedList<>());
 
-        if (!path1.equals("next")) {
+        if (!path.equals("next")) {
 
-            File[] listOfFiles = prepareListOfFiles(path1);
+            File[] listOfFiles = prepareListOfFiles(path);
 
             System.out.println("Trwa ładowanie plików JSON" + "\n");
 
             ObjectMapper mapper = new ObjectMapper();
 
-            for (File file : listOfFiles) {
+            for (File file: listOfFiles) {
 
                 if (file.isFile() && Files.getFileExtension(file.getName()).equals("json")) {
                     ListOfItems itemToAdd;
@@ -67,7 +67,7 @@ public class Preparer extends AbstractPreparer {
 
             System.out.println("Trwa ładowanie plików HTML" + "\n");
 
-            for (File file : listOfFiles) {
+            for (File file: listOfFiles) {
 
                 if (file.isFile() && Files.getFileExtension(file.getName()).equals("html")) {
                     Items itemToAdd;
@@ -81,8 +81,8 @@ public class Preparer extends AbstractPreparer {
                                 "Uruchom program ponownie, podając ścieżkę do folderu zawierającego poprawne pliki."
                                 + "\n");
                     }
-                    if (itemToAdd.getCourtCases().isEmpty()) //if item doesn't have any courtcases (from which we take item's signature)
-                        //it means it has wrong data inside
+                    if(itemToAdd.getCourtCases().isEmpty()) //if item doesn't have any courtcases (from which we take item's signature)
+                                                            //it means it has wrong data inside
                         throw new IllegalArgumentException(file.getName() + " zawiera niepoprawne dane. " +
                                 "Uruchom program ponownie, podając ścieżkę do folderu zawierającego poprawne pliki."
                                 + "\n");
@@ -98,18 +98,18 @@ public class Preparer extends AbstractPreparer {
         return item1;
     }
 
-    public Map<String, Items> prepareRedundantItems(ListOfItems items) {
+    public Map<String,Items> prepareRedundantItems (ListOfItems items){
 
-        Map<String, Items> redundantItems = new HashMap<>();
+        Map<String,Items> redundantItems = new HashMap<>();
 
         List<Items> redundantItemsList = new ArrayList<>(items.getItems()); //an array of items containing redundant items
         //to make every 'CourtCases' a key in a HashMap
 
-        for (Items item : items.getItems()) {
+        for (Items item: items.getItems()){
 
             if (item.getCourtCases().size() > 1) {
 
-                for (int i = 1; i < item.getCourtCases().size(); i++) {
+                for (int i = 1; i<item.getCourtCases().size(); i++){
 
                     Items newItem = new Items();
                     newItem.setCourtCases(item.getCourtCases().subList(i, item.getCourtCases().size()));
@@ -123,7 +123,7 @@ public class Preparer extends AbstractPreparer {
                 }
             }
         }
-        for (Items item : redundantItemsList) redundantItems.put(item.getId(), item);
+        for (Items item: redundantItemsList) redundantItems.put(item.getId(),item);
         return redundantItems;
     }
 
@@ -141,7 +141,7 @@ public class Preparer extends AbstractPreparer {
             if (!file.isFile())
                 throw new IllegalArgumentException("Podano nieprawidłową ścieżkę do pliku");
             try {
-                writer = new MyBufferedWriter().createBufferedWritter(path);
+                writer = new MyBufferedWriter().createBufferedWriter(path);
             } catch (IOException e) {
                 e.printStackTrace();
             }

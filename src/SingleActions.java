@@ -1,10 +1,8 @@
 import jline.console.ConsoleReader;
-import org.jline.reader.LineReader;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Map;
-import java.util.Scanner;
 
 public class SingleActions {
 
@@ -56,7 +54,7 @@ public class SingleActions {
         help("rubrum");
         if (writer != null) writer.write("rubrum" + "\r\n");
         String[] a = reader.readLine().split(", ");
-        for (String str : a) writer.write(str + " ");
+        if (writer != null) for (String str : a) writer.write(str + " ");
         if (writer != null) writer.write("\r\n");
         String s = "";
         for (int i = 0; i < a.length; i++) {
